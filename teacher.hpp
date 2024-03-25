@@ -23,7 +23,7 @@ public:
 																	//Hit F or f and ENTER to exit
 
 private:
-	std::string teacher_user{"mintorattan"}; //mintousername
+	std::string teacher_user;
 	std::vector <std::string> student_list;
 	std::map <std::string, double> attd_percent_map;
 
