@@ -10,10 +10,13 @@
 
 class Teacher {
 public:
-	void set_subjects(std::vector <std::string> sub_list);     //Add subjects to a teacher's subject list file
+
+	std::string get_user();           
+	std::string set_user(std::string);
+
 	std::vector <std::string> get_subjects();                 //Get a vector of teacher_user's subjects
 	
-	std::map <std::string, double> attd_percent(std::string subject); //Get a map containing students attendance%
+	//std::map <std::string, double> attd_percent(std::string subject); //Get a map containing students attendance%
 																	//Needs to be defined
 																	//files containing attd% required
 
@@ -21,21 +24,30 @@ public:
 																	//date in "dd-mm-yy"
 																	//Hit ENTER key after each roll no 
 																	//Hit F or f and ENTER to exit
+	std::vector <std::string> get_student_attendance(std::string roll_no, std::string subject_code);    //Returns a vector
+																						//containing attendance 
+																						//of a student for a subject
+
+	std::string get_subject_code(std::string subject);
+
 
 private:
-	std::string teacher_user;
+	std::string teacher_user; 
 	std::vector <std::string> student_list;
 	std::map <std::string, double> attd_percent_map;
 
 
 };
 
-void Teacher::set_subjects(std::vector <std::string> sub_list) {
-	std::ofstream sub_list_ofstream(teacher_user + ".subls", std::ios::app);
-	for (auto i : sub_list) {
-		sub_list_ofstream << i << std::endl;
-	}
+std::string Teacher::get_user() {
+	return teacher_user;
 }
+
+std::string Teacher::set_user(std::string username){
+	teacher_user = username;
+	return username;
+}
+
 
 std::vector <std::string> Teacher::get_subjects() {
 	std::ifstream sub_list_ifstream(teacher_user + ".subls");
@@ -73,5 +85,26 @@ void Teacher::set_attendance(std::string subject_code, std::string date) {
 	}
 }
 
+std::vector <std::string> Teacher::get_student_attendance(std::string roll_no, std::string subject_code) {
+	std::ifstream attd_instream("ue23c01" + roll_no + subject_code + ".att");
+	std::vector <std::string> attd_vec;
+	std::string attd;
+
+	while (attd_instream) {
+		std::getline(attd_instream, attd);
+		attd_vec.push_back(attd);
+	}
+
+	return attd_vec;
+}
+
+std::string Teacher::get_subject_code(std::string subject) {
+	std::vector <std::string> sublist= get_subjects();
+	for (int i = 0; i < sublist.size(); i += 2) {
+		if (sublist[i] == subject) {
+			return sublist[i + 1];
+		}
+	}
+}
 
 #endif
