@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "frontend.hpp"
 #include "students1.hpp"
 #include "TeacherFrontEnd.hpp"
@@ -7,6 +8,7 @@ void choose_designation(int, char, char);
 bool log_in(int, char, char, Students&);
 void subject_list(int, char, char, std::vector<std::string>&, Students&);
 void menu(int, char, char);
+Students s1;
 
 int main()
 {
@@ -35,7 +37,7 @@ void choose_designation(int TableWidth, char borderChar, char intersectionChar)
         break;
 
     case 2:
-        Students s1;
+        {
         bool is_logged_in;
         is_logged_in = log_in(51, '-', '+', s1);
         if (is_logged_in == true)
@@ -44,8 +46,14 @@ void choose_designation(int TableWidth, char borderChar, char intersectionChar)
             subject_list(125, '-', '+', subjects, s1);
             menu(61, '-', '+');
         }
+        }
         break;
-
+    
+    default :
+        system("cls");
+        std::cout << "INVALID RESPONSE!" << std::endl << "Please try again." << std::endl;
+        choose_designation(51, '-', '+');
+        break;
     }
 }
 
@@ -75,11 +83,20 @@ bool log_in(int TableWidth, char borderChar, char intersectionChar, Students& ob
     }
     else
     {
+        system("cls");
         std::cout << "\033[0;31m" << std::endl;
         printRow(TableWidth, "Login Unsuccessful", false);
+        printRow(TableWidth, "Please try again", false);
         std::cout << "\033[0m" << std::endl;
         printHorizontalLine(TableWidth, borderChar, intersectionChar);
-        system("cls");
+        bool is_logged_in;
+        is_logged_in = log_in(51, '-', '+', s1);
+        if (is_logged_in == true)
+        {
+            std::vector<std::string> subjects = s1.getSubjects();
+            subject_list(125, '-', '+', subjects, s1);
+            menu(61, '-', '+');
+        }
         return false;
     }
 }
@@ -124,22 +141,40 @@ void menu(int TableWidth, char borderChar, char intersectionChar)
     std::cout << "Enter the choice: ";
     std::cin >> choice;
     switch (choice) {
-    case 1: 
-        //Change pass
+    case 1:
+    {
+        std::string new_pass;
+        std::cout << "\nEnter new password: ";
+        std::cin >> new_pass;
+        if (s1.changepass(new_pass)) {
+            system("cls");
+            std::cout << "\033[0;32m" << std::endl;
+            printRow(TableWidth, "Password changed successfully!", false);
+            menu(61, '-', '+');
+        }
 
+        else {
+            std::cout << "Something went wrong!" << std::endl << std::endl;
+            menu(61, '-', '+');
+        }
 
-
+    }
         break;
 
     case 2:
-        //Check attendance
-
-
-
+        
+        ///////////////
 
 
     case 3:
+        std::cout << "\033[0;31m" << std::endl;
+        printRow(TableWidth, "--------------------------Exit--------------------------", false);
         exit(EXIT_SUCCESS);
+
+    default :
+        system("cls");
+        std::cout << "INVALID RESPONSE!" << std::endl << "Please try again." << std::endl;
+        menu(61, '-', '+');
     }
 }
 
